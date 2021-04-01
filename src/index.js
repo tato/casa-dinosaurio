@@ -33,7 +33,7 @@ const draggableTemplate = d => {
         slot = html` <div class="token-display" @dragstart="${e => e.preventDefault()}"></div>`
     }
     if (d.type === "text") {
-        slot = html`<input type="text" .value="${d.text}">`
+        slot = html`<input type="text" .value="${d.text}" @input="${e => d.text = e.target.value}">`
     }
 
     return html`
@@ -50,7 +50,7 @@ function addToken() {
     update(board => board.draggables[draggable.id] = draggable)
 }
 function addText() {
-    let draggable = { id: uniqueId(), proportional: false, type: "text", x: 100, y: 100, width: 256, height: 64 }
+    let draggable = { id: uniqueId(), proportional: false, type: "text", x: 100, y: 100, width: 256, height: 64, text: "" }
     update(board => board.draggables[draggable.id] = draggable)
 }
 
