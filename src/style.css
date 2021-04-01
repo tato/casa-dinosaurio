@@ -1,0 +1,62 @@
+html, body {
+    margin: 0;
+    width: 100%;
+}
+* {
+    box-sizing: border-box;
+}
+#background {
+    display: block;
+    user-select: none;
+    max-width: 1200px;
+    margin: 16px auto 0;
+}
+#actions {
+    margin: 8px 16px 0;
+}
+#token {
+    display: none;
+}
+#draggable-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+}
+.draggable {
+    position: absolute;
+    border: 1px solid black;
+    user-select: none;
+}
+.draggable > img, .draggable > input[type=text] {
+    width: inherit;
+    height: inherit;
+    font-size: inherit;
+    background-color: transparent;
+}
+.draggable-move, .draggable-resize {
+    position: absolute;
+    --size: 16px;
+    width: var(--size);
+    height: var(--size);
+    border: 1px solid black;
+    font-size: var(--size);
+    background-color: white;
+    text-align: center;
+}
+.draggable-move {
+    cursor: grab;
+    top: calc(var(--size) * -1);
+    left: calc(var(--size) * -1);
+}
+.draggable-resize {
+    cursor: nwse-resize;
+    bottom: calc(var(--size) * -1);
+    right: calc(var(--size) * -1);
+}
+.token-display {
+    width: inherit;
+    height: inherit;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(circle.svg);
+}
