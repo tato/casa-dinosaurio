@@ -40,6 +40,7 @@ const draggableTemplate = d => {
         <div class="draggable" id="${d.id}" style="${styleMap(style)}">
             <div class="draggable-move" @mousedown="${e => startDrag(e, 'move')}">+</div>
             <div class="draggable-resize" @mousedown="${e => startDrag(e, 'resize')}">/</div>
+            <div class="draggable-close" @click="${deleteDraggable}">x</div>
             ${slot}
         </div>
     `
@@ -151,6 +152,11 @@ function dragResize(dx, dy) {
     })
 }
 
+
+function deleteDraggable(e) {
+    const id = e.target.closest(".draggable").id
+    update(board => delete board.draggables[id])
+}
 
 
 let _board = { }
