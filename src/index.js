@@ -2,7 +2,7 @@ import {html, render} from 'lit-html'
 import {repeat} from 'lit-html/directives/repeat.js'
 import {styleMap} from 'lit-html/directives/style-map.js'
 
-import casa from "./casa.jpg"
+import casa from "./assets/casa.jpg"
 
 function uniqueId() {
     return '_' + Math.random().toString(36).substr(2, 9);

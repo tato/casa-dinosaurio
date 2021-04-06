@@ -64,5 +64,5 @@ html, body {
     height: inherit;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url(circle.svg);
+    background-image: url(assets/circle.svg);
 }
