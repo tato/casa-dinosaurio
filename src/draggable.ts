@@ -1,17 +1,26 @@
-import {html} from "lit-html"
+import {html, TemplateResult} from "lit-html"
 import {styleMap} from "lit-html/directives/style-map"
-import {update} from "./index.js"
+import {update} from "./index"
 
-export function renderDraggable({options, slot}) {
-    const opt = options;
+export interface Draggable {
+    id: string // TODO: Remove!!
+    x: number
+    y: number
+    width: number
+    height: number
+    proportional: boolean
+}
+
+export function renderDraggable(draggable: Draggable, slot: TemplateResult): TemplateResult {
+    const d = draggable;
 
     const style = { 
-        top: `${opt.y}px`, left: `${opt.x}px`,
-        width: `${opt.width}px`, height: `${opt.height}px`,
+        top: `${d.y}px`, left: `${d.x}px`,
+        width: `${d.width}px`, height: `${d.height}px`,
     }
 
     return html`
-        <div class="draggable" id="${opt.id}" style="${styleMap(style)}">
+        <div class="draggable" id="${d.id}" style="${styleMap(style)}">
             <div class="draggable-move" @mousedown="${e => startDrag(e, 'move')}">+</div>
             <div class="draggable-resize" @mousedown="${e => startDrag(e, 'resize')}">/</div>
             <div class="draggable-close" @click="${deleteDraggable}">x</div>
@@ -19,6 +28,7 @@ export function renderDraggable({options, slot}) {
         </div>
     `
 }
+
 
 let lastMouseX = 0
 let lastMouseY = 0
@@ -60,15 +70,15 @@ function handleDrag(e) {
 
 function dragMove(dx, dy) {
     update(board => {
-        board.draggables[draggingId].x += dx
-        board.draggables[draggingId].y += dy
+        board.widgets[draggingId].draggable.x += dx
+        board.widgets[draggingId].draggable.y += dy
     })
 }
 
 
 function dragResize(dx, dy) {
     update(board => {
-        let it = board.draggables[draggingId]
+        let it = board.widgets[draggingId].draggable
         if (it.proportional) {
             if (dx >= 0 && dy >= 0) {
                 it.width += Math.max(dx, dy)
@@ -89,5 +99,5 @@ function dragResize(dx, dy) {
 
 function deleteDraggable(e) {
     const id = e.target.closest(".draggable").id
-    update(board => delete board.draggables[id])
+    update(board => delete board.widgets[id])
 }
