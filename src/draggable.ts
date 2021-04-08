@@ -32,29 +32,32 @@ export function renderDraggable(draggable: Draggable, slot: TemplateResult): Tem
 
 let lastMouseX = 0
 let lastMouseY = 0
-let draggingId = null
-let draggingAction = null
+let draggingId: string = null
+let draggingAction: string = null
 
 
-function startDrag(e, action) {
+function startDrag(e: MouseEvent, action: string) {
     e.preventDefault()
     lastMouseX = e.screenX
     lastMouseY = e.screenY
-    document.onmousemove = handleDrag
-    document.onmouseup = endDrag
-    draggingId = e.target.closest(".draggable").id
-    draggingAction = action
+
+    if (e.target instanceof Element) {
+        document.onmousemove = handleDrag
+        document.onmouseup = endDrag
+        draggingId = e.target.closest(".draggable").id
+        draggingAction = action
+    }
 }
 
 
-function endDrag(e) {
+function endDrag(e: MouseEvent) {
     e.preventDefault()
     document.onmouseup = null
     document.onmousemove = null
 }
 
 
-function handleDrag(e) {
+function handleDrag(e: MouseEvent) {
     e.preventDefault()
     const dx = e.screenX - lastMouseX
     const dy = e.screenY - lastMouseY
@@ -68,7 +71,7 @@ function handleDrag(e) {
 }
 
 
-function dragMove(dx, dy) {
+function dragMove(dx: number, dy: number) {
     update(board => {
         board.widgets[draggingId].draggable.x += dx
         board.widgets[draggingId].draggable.y += dy
@@ -76,7 +79,7 @@ function dragMove(dx, dy) {
 }
 
 
-function dragResize(dx, dy) {
+function dragResize(dx: number, dy: number) {
     update(board => {
         let it = board.widgets[draggingId].draggable
         if (it.proportional) {
@@ -97,7 +100,9 @@ function dragResize(dx, dy) {
 }
 
 
-function deleteDraggable(e) {
-    const id = e.target.closest(".draggable").id
-    update(board => delete board.widgets[id])
+function deleteDraggable(e: MouseEvent) {
+    if (e.target instanceof Element) {
+        const id = e.target.closest(".draggable").id
+        update(board => delete board.widgets[id])
+    }
 }
