@@ -5,7 +5,8 @@ import { selectWidgetById, removeWidget, updateText } from "./widgetsSlice"
 import circle from "./circle.svg"
 import { EntityId } from "@reduxjs/toolkit"
 import { RootState } from "../../index"
-import React from "react"
+import React, { useState } from "react"
+import { TextColorSelector } from "./TextColorSelector"
 
 interface WidgetProps {
     widgetId: EntityId,
@@ -14,6 +15,10 @@ interface WidgetProps {
 }
 
 export function Widget({widgetId, setDraggingWidgetId, setDraggingAction}: WidgetProps) {
+    const [colorSelectorVisible, setColorSelectorVisible] = useState(false) // TODO! how about the token widget
+    const [textColor, setTextColor] = useState("black") // TODO! how about the token widget
+    const [textSize, setTextSize] = useState(16) // TODO! how about the token widget
+
     const widget = useSelector((state: RootState) => selectWidgetById(state, widgetId))
     const dispatch = useDispatch()
 
@@ -32,24 +37,46 @@ export function Widget({widgetId, setDraggingWidgetId, setDraggingAction}: Widge
             setDraggingAction(action)
         }
     }
-    
-    function onClickDelete() {
-        dispatch(removeWidget(widgetId))
-    }
+    const onClickDelete = () => dispatch(removeWidget(widgetId))
+    const onClickTextColor = () => setColorSelectorVisible(visible => !visible)
+    const onClickTextSmaller = () => setTextSize(ts => ts - Math.floor(ts*0.2))
+    const onClickTextBigger = () => setTextSize(ts => ts + Math.floor(ts*0.2))
 
     let content = null;
     if (widget.kind === "token") {
         content = <div className={styles.tokenDisplay} style={{backgroundImage: `url(${circle})`}} />
         
     } else if (widget.kind === "text") {
-        const onWidgetInput = (e: React.FormEvent<HTMLInputElement>) => {
+        const onTextAreaInput = (e: React.FormEvent<HTMLTextAreaElement>) => {
             if (e.target instanceof HTMLInputElement) {
                 dispatch(updateText({widgetId, text: e.target.value}))
             }
         }
-        content = <input type="text" 
-            value={widget.text} 
-            onInput={onWidgetInput} />
+        const textAreaStyle = {
+            color: textColor,
+            fontSize: `${textSize}px`,
+        }
+        content = <textarea 
+                defaultValue={widget.text} 
+                onInput={onTextAreaInput} 
+                style={textAreaStyle}>
+            </textarea>
+    }
+
+    let textColorSelector = null;
+    if (colorSelectorVisible === true) {
+        textColorSelector = <div className={styles.textColorSelector}>
+            <TextColorSelector onColorChange={setTextColor}/>
+        </div>
+    }
+
+    let textWidgetControls = null;
+    if (widget.kind === "text" ) {
+        textWidgetControls = <>
+            <div className={styles.draggableTextColor} onClick={onClickTextColor}>A</div>
+            <div className={styles.draggableTextSmaller} onClick={onClickTextSmaller}>-</div>
+            <div className={styles.draggableTextBigger} onClick={onClickTextBigger}>+</div>
+        </>
     }
 
     return (
@@ -57,6 +84,8 @@ export function Widget({widgetId, setDraggingWidgetId, setDraggingAction}: Widge
             <div className={styles.draggableMove} onMouseDown={e => onStartDrag(e, 'move')}>+</div>
             <div className={styles.draggableResize} onMouseDown={e => onStartDrag(e, 'resize')}>/</div>
             <div className={styles.draggableClose} onClick={onClickDelete}>x</div>
+            { textWidgetControls }
+            { textColorSelector }
             { content }
         </div>
     )

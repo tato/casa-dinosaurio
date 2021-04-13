@@ -5,10 +5,16 @@
     z-index: 3;
 }
 
+@media (min-width: 1200px) {
+    .background {
+        max-width: 1200px;
+    }
+}
+
 .background {
     display: block;
     user-select: none;
-    max-width: 1200px;
+    width: 100%;
     margin: 16px auto 0;
 }
 

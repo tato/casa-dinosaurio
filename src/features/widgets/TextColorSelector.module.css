@@ -1,0 +1,19 @@
+.container {
+    --size: 32px;
+    height: var(--size);
+    width: calc(var(--size) * 6);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border: 1px solid black;
+    background-color: white;
+    border-radius: 8px;
+}
+
+.colorButton {
+    height: calc(var(--size) * 0.75);
+    width: calc(var(--size) * 0.75);
+    border: 1px solid grey;
+    border-radius: 100%;
+    cursor: pointer;
+}

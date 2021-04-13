@@ -3,13 +3,19 @@
     border: 1px solid black;
     user-select: none;
 }
-.draggable > img, .draggable > input[type=text] {
+.draggable > img, .draggable > textarea {
     width: inherit;
     height: inherit;
     font-size: inherit;
+    font-family: inherit;
     background-color: transparent;
 }
-.draggableMove, .draggableResize, .draggableClose {
+.draggable > textarea {
+    resize: none;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+.draggableMove, .draggableResize, .draggableClose, .draggableTextColor, .draggableTextSmaller, .draggableTextBigger {
     position: absolute;
     --size: 16px;
     width: var(--size);
@@ -34,6 +40,30 @@
     cursor: pointer;
     top: calc(var(--size) * -1);
     right: calc(var(--size) * -1);
+}
+.draggableTextColor {
+    cursor: pointer;
+    top: calc(var(--size) * -1);
+    left: 50%;
+    transform: translate(-50%);
+}
+.draggableTextSmaller {
+    cursor: pointer;
+    top: calc(var(--size) * -1);
+    left: calc(50% - var(--size));
+    transform: translate(-50%);
+}
+.draggableTextBigger {
+    cursor: pointer;
+    top: calc(var(--size) * -1);
+    left: calc(50% + var(--size));
+    transform: translate(-50%);
+}
+.textColorSelector {
+    position: absolute;
+    top: -32px;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 .tokenDisplay {
     width: inherit;
