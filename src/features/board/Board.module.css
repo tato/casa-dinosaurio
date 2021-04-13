@@ -1,0 +1,17 @@
+.actions {
+    position: fixed;
+    top: 8px;
+    left: 16px;
+    z-index: 3;
+}
+
+.background {
+    display: block;
+    user-select: none;
+    max-width: 1200px;
+    margin: 16px auto 0;
+}
+
+input[type=file] {
+    display: none;
+}

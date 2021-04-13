@@ -1,27 +1,3 @@
-html, body {
-    margin: 0;
-    width: 100%;
-}
-* {
-    box-sizing: border-box;
-}
-#background {
-    display: block;
-    user-select: none;
-    max-width: 1200px;
-    margin: 16px auto 0;
-}
-#actions {
-    margin: 8px 16px 0;
-}
-#token {
-    display: none;
-}
-#draggable-container {
-    position: absolute;
-    top: 0;
-    left: 50%;
-}
 .draggable {
     position: absolute;
     border: 1px solid black;
@@ -33,7 +9,7 @@ html, body {
     font-size: inherit;
     background-color: transparent;
 }
-.draggable-move, .draggable-resize, .draggable-close {
+.draggableMove, .draggableResize, .draggableClose {
     position: absolute;
     --size: 16px;
     width: var(--size);
@@ -44,25 +20,24 @@ html, body {
     text-align: center;
     font-family: sans-serif;
 }
-.draggable-move {
+.draggableMove {
     cursor: grab;
     top: calc(var(--size) * -1);
     left: calc(var(--size) * -1);
 }
-.draggable-resize {
+.draggableResize {
     cursor: nwse-resize;
     bottom: calc(var(--size) * -1);
     right: calc(var(--size) * -1);
 }
-.draggable-close {
+.draggableClose {
     cursor: pointer;
     top: calc(var(--size) * -1);
     right: calc(var(--size) * -1);
 }
-.token-display {
+.tokenDisplay {
     width: inherit;
     height: inherit;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url(assets/circle.svg);
 }
