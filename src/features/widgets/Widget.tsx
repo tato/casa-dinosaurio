@@ -1,25 +1,32 @@
 
 import { useDispatch, useSelector } from "react-redux"
 import styles from "./Widget.module.css"
-import { selectWidgetById, removeWidget, updateText } from "./widgetsSlice"
+import { selectWidgetById, removeWidget, updateText, selectFocusedWidgetId, focusWidget } from "./widgetsSlice"
 import circle from "./circle.svg"
 import { EntityId } from "@reduxjs/toolkit"
 import { RootState } from "../../index"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { TextColorSelector } from "./TextColorSelector"
 import { startDragging } from "../board/boardSlice"
 
 interface WidgetProps {
     widgetId: EntityId,
+    focused: boolean,
 }
 
-export function Widget({widgetId}: WidgetProps) {
+export function Widget({widgetId, focused}: WidgetProps) {
     const [colorSelectorVisible, setColorSelectorVisible] = useState(false) // TODO! how about the token widget
     const [textColor, setTextColor] = useState("black") // TODO! how about the token widget
     const [textSize, setTextSize] = useState(16) // TODO! how about the token widget
 
     const widget = useSelector((state: RootState) => selectWidgetById(state, widgetId))
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (focused) {
+            console.log(`${widgetId} is focused!`)
+        }
+    })
 
     if (!widget) return <div></div>
 
@@ -39,6 +46,8 @@ export function Widget({widgetId}: WidgetProps) {
     const onClickTextColor = () => setColorSelectorVisible(visible => !visible)
     const onClickTextSmaller = () => setTextSize(ts => ts - Math.floor(ts*0.2))
     const onClickTextBigger = () => setTextSize(ts => ts + Math.floor(ts*0.2))
+
+    const onFocusDraggable = () => dispatch(focusWidget({widgetId}))
 
     let content = null;
     if (widget.kind === "token") {
@@ -95,10 +104,12 @@ export function Widget({widgetId}: WidgetProps) {
         { widget.proportional ? null : nwseResizeControl }
     </>
 
+    const draggableClassName = focused ? `${styles.draggable} ${styles.focusedDraggable}` : styles.draggable
+
     return (
-        <div className={styles.draggable} style={draggableStyle}>
+        <div className={draggableClassName} style={draggableStyle} onMouseDown={onFocusDraggable}>
             {/* TODO! <div className={styles.draggableClose} onClick={onClickDelete}>x</div> */}
-            { resizeControls }
+            { focused ? resizeControls : null }
             { textWidgetControls }
             { textColorSelector }
             { content }

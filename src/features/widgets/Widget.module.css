@@ -1,10 +1,11 @@
 .draggable {
     position: absolute;
-    /* border: 1px dashed #222222; */
-    outline: 1px dashed #222222;
-    box-shadow: 0 0 0 1px white;
     user-select: none;
     cursor: grab;
+}
+.focusedDraggable {
+    outline: 1px dashed #222222;
+    box-shadow: 0 0 0 1px white;
 }
 .draggable > img, .draggable > textarea {
     width: inherit;
@@ -17,6 +18,10 @@
     resize: none;
     overflow-x: hidden;
     overflow-y: hidden;
+    border: none;
+}
+.focusedDraggable > textarea {
+    border: 1px solid black;
 }
 .draggableClose, .draggableTextColor, .draggableTextSmaller, .draggableTextBigger {
     position: absolute;

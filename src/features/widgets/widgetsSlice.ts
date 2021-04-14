@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSlice, EntityId, nanoid } from "@reduxjs/toolkit"
+import { createEntityAdapter, createSlice, Dictionary, EntityId, EntityState, nanoid } from "@reduxjs/toolkit"
 import { RootState } from "../../index"
 
 interface BaseWidget {
@@ -31,11 +31,17 @@ export function getDraggingAction(action: string, widgetId: EntityId, dx: number
 
 const widgetsAdapter = createEntityAdapter<Widget>()
 
+interface WidgetsState extends EntityState<Widget> {
+    focusedWidget: EntityId | null,
+}
+let initialState: WidgetsState = {
+    ...widgetsAdapter.getInitialState(),
+    focusedWidget: null,
+}
+
 export const widgetsSlice = createSlice({
     name: "widgets",
-    initialState: {
-        ...widgetsAdapter.getInitialState(),
-    },
+    initialState,
     reducers: {
         addTokenWidget: {
             reducer: widgetsAdapter.addOne,
@@ -122,16 +128,24 @@ export const widgetsSlice = createSlice({
                     if (direction.includes("N")) widget.y -= diff.height
                 }
             }
+        },
+        focusWidget(state, action) {
+            state.focusedWidget = action.payload.widgetId
+        },
+        unfocusWidget(state) {
+            state.focusedWidget = null
         }
     }
 })
 
-export const { addTokenWidget, addTextWidget, updateText, removeWidget, moveWidget, resizeWidget } = widgetsSlice.actions
+export const { addTokenWidget, addTextWidget, updateText, removeWidget, moveWidget, resizeWidget, focusWidget, unfocusWidget } = widgetsSlice.actions
 
 export const {
     selectAll: selectAllWidgets,
     selectById: selectWidgetById,
     selectIds: selectWidgetIds
 } = widgetsAdapter.getSelectors((state: RootState) => state.widgets)
+
+export const selectFocusedWidgetId = (state: RootState) => state.widgets.focusedWidget
 
 export default widgetsSlice.reducer
