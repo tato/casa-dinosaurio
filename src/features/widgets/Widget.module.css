@@ -4,6 +4,7 @@
     outline: 1px dashed #222222;
     box-shadow: 0 0 0 1px white;
     user-select: none;
+    cursor: grab;
 }
 .draggable > img, .draggable > textarea {
     width: inherit;
@@ -17,7 +18,7 @@
     overflow-x: hidden;
     overflow-y: hidden;
 }
-.draggableMove, .draggableClose, .draggableTextColor, .draggableTextSmaller, .draggableTextBigger {
+.draggableClose, .draggableTextColor, .draggableTextSmaller, .draggableTextBigger {
     position: absolute;
     --size: 16px;
     width: var(--size);
@@ -27,11 +28,6 @@
     background-color: white;
     text-align: center;
     font-family: sans-serif;
-}
-.draggableMove {
-    cursor: grab;
-    top: calc(var(--size) * -1);
-    left: calc(var(--size) * -1);
 }
 .draggableClose {
     cursor: pointer;
