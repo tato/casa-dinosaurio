@@ -31,8 +31,6 @@ export function getDraggingAction(action: string, widgetId: EntityId, dx: number
 
 const widgetsAdapter = createEntityAdapter<Widget>()
 
-
-
 export const widgetsSlice = createSlice({
     name: "widgets",
     initialState: {
@@ -93,42 +91,36 @@ export const widgetsSlice = createSlice({
 
             let widget = state.entities[widgetId]
             if (widget) {
+                let diff = { width: 0, height: 0 }
+
                 if (direction.includes("E")) {
-                    widget.width += dx
+                    diff.width = dx
                 } else if (direction.includes("W")) {
-                    widget.width -= dx
-                    widget.x += dx
+                    diff.width = -dx
                 }
+
                 if (direction.includes("S")) {
-                    widget.height += dy
+                    diff.height = dy
                 } else if (direction.includes("N")) {
-                    widget.height -= dy
-                    widget.y += dy
+                    diff.height = -dy
                 }
 
                 if (widget.proportional) {
-                    let width
-                    let height
-                    if (dx >= 0 && dy >= 0) {
-                        width = Math.max(widget.width, widget.height)
-                        height = Math.max(widget.width, widget.height)
+                    if (diff.width >= 0 && diff.height >= 0) {
+                        diff.width = Math.max(diff.width, diff.height)
+                        diff.height = Math.max(diff.width, diff.height)
                     } else {
-                        width = Math.min(widget.width, widget.height)
-                        height = Math.min(widget.width, widget.height)
+                        diff.width = Math.min(diff.width, diff.height)
+                        diff.height = Math.min(diff.width, diff.height)
                     }
-                    if (direction.includes("W"))
-                        widget.x += widget.width - width
-                    if (direction.includes("N"))
-                        widget.y += widget.height - height
-                    widget.width = width
-                    widget.height = height
                 }
 
-                widget.width = Math.max(16, widget.width)
-                widget.height = Math.max(16, widget.height)
-
-                // TODO! PURE E OR PURE N RESIZING ON PROPORTIONAL WIDGETS DOESN'T DO ANYTHING
-                // TODO! E OR N RESIZING A WIDGET THAT IS ALREADY MINIMUM SIZE MOVES IT
+                if (widget.width + diff.width >= 16 && widget.height + diff.height >= 16) {
+                    widget.width += diff.width
+                    widget.height += diff.height
+                    if (direction.includes("W")) widget.x -= diff.width
+                    if (direction.includes("N")) widget.y -= diff.height
+                }
             }
         }
     }
