@@ -76,23 +76,46 @@ export const widgetsSlice = createSlice({
             }
         },
         resizeWidget(state, action) {
-            let { widgetId, dx, dy } = action.payload
+            let { widgetId, dx, dy, direction } = action.payload
+
             let widget = state.entities[widgetId]
             if (widget) {
-                if (widget.proportional) {
-                    if (dx >= 0 && dy >= 0) {
-                        widget.width += Math.max(dx, dy)
-                        widget.height += Math.max(dx, dy)
-                    } else {
-                        widget.width += Math.min(dx, dy)
-                        widget.height += Math.min(dx, dy)
-                    }
-                } else {
+                if (direction.includes("E")) {
                     widget.width += dx
-                    widget.height += dy
+                } else if (direction.includes("W")) {
+                    widget.width -= dx
+                    widget.x += dx
                 }
+                if (direction.includes("S")) {
+                    widget.height += dy
+                } else if (direction.includes("N")) {
+                    widget.height -= dy
+                    widget.y += dy
+                }
+
+                if (widget.proportional) {
+                    let width
+                    let height
+                    if (dx >= 0 && dy >= 0) {
+                        width = Math.max(widget.width, widget.height)
+                        height = Math.max(widget.width, widget.height)
+                    } else {
+                        width = Math.min(widget.width, widget.height)
+                        height = Math.min(widget.width, widget.height)
+                    }
+                    if (direction.includes("W"))
+                        widget.x += widget.width - width
+                    if (direction.includes("N"))
+                        widget.y += widget.height - height
+                    widget.width = width
+                    widget.height = height
+                }
+
                 widget.width = Math.max(16, widget.width)
                 widget.height = Math.max(16, widget.height)
+
+                // TODO! PURE E OR PURE N RESIZING ON PROPORTIONAL WIDGETS DOESN'T DO ANYTHING
+                // TODO! E OR N RESIZING A WIDGET THAT IS ALREADY MINIMUM SIZE MOVES IT
             }
         }
     }

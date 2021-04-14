@@ -30,8 +30,9 @@ export function WidgetsHolder() {
             
             if (draggingAction === "move") {
                 dispatch(moveWidget({widgetId: draggingWidgetId, dx, dy}))
-            } else if (draggingAction === "resize") {
-                dispatch(resizeWidget({widgetId: draggingWidgetId, dx, dy}))
+            } else if (draggingAction.startsWith("resize")) {
+                const direction = draggingAction.substring(6)
+                dispatch(resizeWidget({widgetId: draggingWidgetId, dx, dy, direction}))
             }
         }
 

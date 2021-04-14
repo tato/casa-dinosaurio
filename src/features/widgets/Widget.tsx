@@ -81,9 +81,19 @@ export function Widget({widgetId, setDraggingWidgetId, setDraggingAction}: Widge
 
     return (
         <div className={styles.draggable} style={draggableStyle}>
-            <div className={styles.draggableMove} onMouseDown={e => onStartDrag(e, 'move')}>+</div>
+            {/* <div className={styles.draggableMove} onMouseDown={e => onStartDrag(e, 'move')}>+</div>
             <div className={styles.draggableResize} onMouseDown={e => onStartDrag(e, 'resize')}>/</div>
-            <div className={styles.draggableClose} onClick={onClickDelete}>x</div>
+            <div className={styles.draggableClose} onClick={onClickDelete}>x</div> */}
+
+            <div className={styles.resizeNW} onMouseDown={e => onStartDrag(e, "resizeNW")}></div>
+            <div className={styles.resizeNE} onMouseDown={e => onStartDrag(e, "resizeNE")}></div>
+            <div className={styles.resizeSW} onMouseDown={e => onStartDrag(e, "resizeSW")}></div>
+            <div className={styles.resizeSE} onMouseDown={e => onStartDrag(e, "resizeSE")}></div>
+            <div className={styles.resizeN}  onMouseDown={e => onStartDrag(e, "resizeN")}></div>
+            <div className={styles.resizeS}  onMouseDown={e => onStartDrag(e, "resizeS")}></div>
+            <div className={styles.resizeW}  onMouseDown={e => onStartDrag(e, "resizeW")}></div>
+            <div className={styles.resizeE}  onMouseDown={e => onStartDrag(e, "resizeE")}></div>
+
             { textWidgetControls }
             { textColorSelector }
             { content }

@@ -1,6 +1,8 @@
 .draggable {
     position: absolute;
-    border: 1px solid black;
+    /* border: 1px dashed #222222; */
+    outline: 1px dashed #222222;
+    box-shadow: 0 0 0 1px white;
     user-select: none;
 }
 .draggable > img, .draggable > textarea {
@@ -15,7 +17,7 @@
     overflow-x: hidden;
     overflow-y: hidden;
 }
-.draggableMove, .draggableResize, .draggableClose, .draggableTextColor, .draggableTextSmaller, .draggableTextBigger {
+.draggableMove, .draggableClose, .draggableTextColor, .draggableTextSmaller, .draggableTextBigger {
     position: absolute;
     --size: 16px;
     width: var(--size);
@@ -30,11 +32,6 @@
     cursor: grab;
     top: calc(var(--size) * -1);
     left: calc(var(--size) * -1);
-}
-.draggableResize {
-    cursor: nwse-resize;
-    bottom: calc(var(--size) * -1);
-    right: calc(var(--size) * -1);
 }
 .draggableClose {
     cursor: pointer;
@@ -58,6 +55,63 @@
     top: calc(var(--size) * -1);
     left: calc(50% + var(--size));
     transform: translate(-50%);
+}
+.resizeNW, .resizeNE, .resizeSW, .resizeSE, .resizeN, .resizeS, .resizeW, .resizeE {
+    position: absolute;
+    --size: 14px;
+    width: var(--size);
+    height: var(--size);
+    border: 1px solid black;
+    font-size: var(--size);
+    background-color: white;
+}
+.resizeNW {
+    cursor: nwse-resize;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+}
+.resizeNE {
+    cursor: nesw-resize;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+}
+.resizeSW {
+    cursor: nesw-resize;
+    bottom: 0;
+    left: 0;
+    transform: translate(-50%, 50%);
+}
+.resizeSE {
+    cursor: nwse-resize;
+    bottom: 0;
+    right: 0;
+    transform: translate(50%, 50%);
+}
+.resizeN {
+    cursor: ns-resize;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.resizeS {
+    cursor: ns-resize;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 50%);
+}
+.resizeW {
+    cursor: ew-resize;
+    top: 50%;
+    left: 0;
+    transform: translate(-50%, -50%);
+}
+.resizeE {
+    cursor: ew-resize;
+    top: 50%;
+    right: 0;
+    transform: translate(50%, -50%);
 }
 .textColorSelector {
     position: absolute;
