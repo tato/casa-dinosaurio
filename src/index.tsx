@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-import App from './App'
 import { Provider } from 'react-redux'
 import * as serviceWorker from './serviceWorker'
 
 import { configureStore } from "@reduxjs/toolkit"
 import boardReducer from "./features/board/boardSlice"
 import widgetsReducer from "./features/widgets/widgetsSlice"
+import { Board } from './features/board/Board'
 
 export let store = configureStore({
   reducer: {
@@ -38,7 +38,7 @@ function render() {
   ReactDOM.render(
     <React.StrictMode>
       <Provider store={store}>
-        <App />
+        <Board />
       </Provider>
     </React.StrictMode>,
     document.getElementById('root')

@@ -18,7 +18,20 @@ interface TextWidget extends BaseWidget {
 }
 type Widget = TokenWidget | TextWidget
 
+
+// TODO! this helper might be a bit wacky
+export function getDraggingAction(action: string, widgetId: EntityId, dx: number, dy: number) {
+    if (action === "move") {
+        return moveWidget({widgetId, dx, dy})
+    } else if (action.startsWith("resize")) {
+        const direction = action.substring(6)
+        return resizeWidget({widgetId, dx, dy, direction})
+    }
+}
+
 const widgetsAdapter = createEntityAdapter<Widget>()
+
+
 
 export const widgetsSlice = createSlice({
     name: "widgets",

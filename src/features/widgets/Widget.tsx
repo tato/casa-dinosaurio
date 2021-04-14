@@ -7,14 +7,13 @@ import { EntityId } from "@reduxjs/toolkit"
 import { RootState } from "../../index"
 import React, { useState } from "react"
 import { TextColorSelector } from "./TextColorSelector"
+import { startDragging } from "../board/boardSlice"
 
 interface WidgetProps {
     widgetId: EntityId,
-    setDraggingWidgetId: any,
-    setDraggingAction: any,
 }
 
-export function Widget({widgetId, setDraggingWidgetId, setDraggingAction}: WidgetProps) {
+export function Widget({widgetId}: WidgetProps) {
     const [colorSelectorVisible, setColorSelectorVisible] = useState(false) // TODO! how about the token widget
     const [textColor, setTextColor] = useState("black") // TODO! how about the token widget
     const [textSize, setTextSize] = useState(16) // TODO! how about the token widget
@@ -33,8 +32,7 @@ export function Widget({widgetId, setDraggingWidgetId, setDraggingAction}: Widge
         e.preventDefault()
     
         if (e.target instanceof Element) {
-            setDraggingWidgetId(widgetId)
-            setDraggingAction(action)
+            dispatch(startDragging({widgetId, action}))
         }
     }
     const onClickDelete = () => dispatch(removeWidget(widgetId))
@@ -100,7 +98,7 @@ export function Widget({widgetId, setDraggingWidgetId, setDraggingAction}: Widge
     return (
         <div className={styles.draggable} style={draggableStyle}>
             {/* TODO! <div className={styles.draggableClose} onClick={onClickDelete}>x</div> */}
-            {resizeControls}
+            { resizeControls }
             { textWidgetControls }
             { textColorSelector }
             { content }

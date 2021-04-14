@@ -1,9 +1,7 @@
-.actions {
-    position: fixed;
-    top: 8px;
-    left: 16px;
-    z-index: 3;
+.board {
+    width: 100%;
 }
+
 
 @media (min-width: 1200px) {
     .background {
