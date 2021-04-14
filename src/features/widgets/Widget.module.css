@@ -19,9 +19,12 @@
     overflow-x: hidden;
     overflow-y: hidden;
     border: none;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    box-shadow: none;
+    outline: none;
 }
 .focusedDraggable > textarea {
-    border: 1px solid black;
+    border: none;
 }
 .draggableClose, .draggableTextColor, .draggableTextSmaller, .draggableTextBigger {
     position: absolute;

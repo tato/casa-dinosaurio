@@ -110,8 +110,8 @@ export function Widget({widgetId, focused}: WidgetProps) {
         <div className={draggableClassName} style={draggableStyle} onMouseDown={onFocusDraggable}>
             {/* TODO! <div className={styles.draggableClose} onClick={onClickDelete}>x</div> */}
             { focused ? resizeControls : null }
-            { textWidgetControls }
-            { textColorSelector }
+            { focused ? textWidgetControls : null }
+            { focused ? textColorSelector : null }
             { content }
         </div>
     )
