@@ -1,0 +1,13 @@
+.widgetTrash {
+    --size: 50px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 100%;
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+}

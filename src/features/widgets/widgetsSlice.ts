@@ -82,6 +82,7 @@ export const widgetsSlice = createSlice({
             }
         },
         removeWidget(state, action) {
+            state.focusedWidget = null
             widgetsAdapter.removeOne(state, action.payload)
         },
         moveWidget(state, action) {
@@ -133,6 +134,7 @@ export const widgetsSlice = createSlice({
             state.focusedWidget = action.payload.widgetId
         },
         unfocusWidget(state) {
+            // Note: removeWidget also unfocuses
             state.focusedWidget = null
         }
     }

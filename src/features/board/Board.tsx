@@ -2,10 +2,11 @@ import { useDispatch, useSelector } from "react-redux"
 import { selectDraggingAction, selectDraggingWidgetId, stopDragging } from "./boardSlice"
 import styles from "./Board.module.css"
 import React, { useCallback, useState } from "react"
-import { getDraggingAction } from "../widgets/widgetsSlice"
+import { getDraggingAction, removeWidget } from "../widgets/widgetsSlice"
 import { RootState } from "../../index"
 import { WidgetsHolder } from "../widgets/WidgetsHolder"
 import { BoardActions } from "./BoardActions"
+import { WidgetTrash } from "./WidgetTrash"
 
 
 export function Board() {
@@ -35,6 +36,15 @@ export function Board() {
     }
 
 
+    const widgetTrashOnMouseUp = () => {
+        dispatch(removeWidget(draggingWidgetId))
+    }
+
+    let widgetTrash = null
+    if (draggingWidgetId != null) {
+        widgetTrash = <WidgetTrash onMouseUp={widgetTrashOnMouseUp} />
+    }
+
     return (
         <div 
             className={styles.board}
@@ -44,6 +54,7 @@ export function Board() {
             <BoardActions />
             <img className={styles.background} src={backgroundImage} onDragStart={e => e.preventDefault()} alt=""/>
             <WidgetsHolder/>
+            { widgetTrash }
         </div>
     )
 }
