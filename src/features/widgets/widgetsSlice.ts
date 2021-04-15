@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSlice, Dictionary, EntityId, EntityState, nanoid } from "@reduxjs/toolkit"
+import { createEntityAdapter, createSlice, EntityId, EntityState, nanoid } from "@reduxjs/toolkit"
 import { RootState } from "../../index"
 
 interface BaseWidget {

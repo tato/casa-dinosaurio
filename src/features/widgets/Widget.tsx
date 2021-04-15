@@ -1,7 +1,7 @@
 
 import { useDispatch, useSelector } from "react-redux"
 import styles from "./Widget.module.css"
-import { selectWidgetById, removeWidget, updateText, selectFocusedWidgetId, focusWidget } from "./widgetsSlice"
+import { selectWidgetById, removeWidget, updateText, focusWidget } from "./widgetsSlice"
 import circle from "./circle.svg"
 import { EntityId } from "@reduxjs/toolkit"
 import { RootState } from "../../index"
