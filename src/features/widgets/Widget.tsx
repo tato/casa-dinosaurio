@@ -1,11 +1,11 @@
 
 import { useDispatch, useSelector } from "react-redux"
 import styles from "./Widget.module.css"
-import { selectWidgetById, updateText, focusWidget } from "./widgetsSlice"
+import { selectWidgetById, updateText, focusWidget, unfocusWidget } from "./widgetsSlice"
 import circle from "./circle.svg"
 import { EntityId } from "@reduxjs/toolkit"
 import { RootState } from "../../index"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { TextColorSelector } from "./TextColorSelector"
 import { startDragging } from "../board/boardSlice"
 
@@ -23,10 +23,16 @@ export function Widget({widgetId, focused}: WidgetProps) {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (focused) {
-            console.log(`${widgetId} is focused!`)
+        function mouseDownUnfocus(event: MouseEvent) {
+            if (event.target && event.target instanceof HTMLElement && !event.target.closest(`.${styles.draggable}`)) {
+                dispatch(unfocusWidget())
+            }
         }
-    })
+        document.addEventListener("mousedown", mouseDownUnfocus)
+        return function cleanup() {
+            document.removeEventListener("mousedown", mouseDownUnfocus)
+        }
+    }, [dispatch, unfocusWidget])
 
     if (!widget) return <div></div>
 
@@ -105,6 +111,7 @@ export function Widget({widgetId, focused}: WidgetProps) {
     </>
 
     const draggableClassName = focused ? `${styles.draggable} ${styles.focusedDraggable}` : styles.draggable
+
 
     return (
         <div className={draggableClassName} style={draggableStyle} onMouseDown={onFocusDraggable}>
