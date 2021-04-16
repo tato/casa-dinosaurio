@@ -26,9 +26,9 @@
 .focusedDraggable > textarea {
     border: none;
 }
-.draggableClose, .draggableTextColor, .draggableTextSmaller, .draggableTextBigger {
+.draggableTextMove, .draggableTextColor, .draggableTextSmaller, .draggableTextBigger {
     position: absolute;
-    --size: 16px;
+    --size: 20px;
     width: var(--size);
     height: var(--size);
     border: 1px solid black;
@@ -36,29 +36,37 @@
     background-color: white;
     text-align: center;
     font-family: sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.draggableClose {
-    cursor: pointer;
-    top: calc(var(--size) * -1);
-    right: calc(var(--size) * -1);
+.draggableTextMove {
+    cursor: move;
+    top: 0;
+    left: 50%;
+    transform: translate(-200%, -150%);
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
 }
 .draggableTextColor {
     cursor: pointer;
-    top: calc(var(--size) * -1);
+    top: 0;
     left: 50%;
-    transform: translate(-50%);
+    transform: translate(-100%, -150%);
 }
 .draggableTextSmaller {
     cursor: pointer;
-    top: calc(var(--size) * -1);
-    left: calc(50% - var(--size));
-    transform: translate(-50%);
+    top: 0;
+    left: 50%;
+    transform: translate(0, -150%);
 }
 .draggableTextBigger {
     cursor: pointer;
-    top: calc(var(--size) * -1);
-    left: calc(50% + var(--size));
-    transform: translate(-50%);
+    top: 0;
+    left: 50%;
+    transform: translate(100%, -150%);
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
 }
 .resizeNW, .resizeNE, .resizeSW, .resizeSE, .resizeN, .resizeS, .resizeW, .resizeE {
     position: absolute;
@@ -119,7 +127,7 @@
 }
 .textColorSelector {
     position: absolute;
-    top: -32px;
+    top: -54px;
     left: 50%;
     transform: translate(-50%, -50%);
 }

@@ -83,6 +83,7 @@ export function Widget({widgetId, focused}: WidgetProps) {
     let textWidgetControls = null;
     if (widget.kind === "text" ) {
         textWidgetControls = <>
+            <div className={styles.draggableTextMove} onMouseDown={e => onStartDrag(e, "move")}>✥</div>
             <div className={styles.draggableTextColor} onClick={onClickTextColor}>A</div>
             <div className={styles.draggableTextSmaller} onClick={onClickTextSmaller}>-</div>
             <div className={styles.draggableTextBigger} onClick={onClickTextBigger}>+</div>
