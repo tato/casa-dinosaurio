@@ -20,7 +20,7 @@ export function Board() {
 
     const dispatch = useDispatch()
 
-    const onMouseDown = () => dispatch(unfocusWidget())
+    // const onMouseDown = () => dispatch(unfocusWidget())
 
     const onMouseMove = useCallback((event: React.MouseEvent) => {
         if (draggingWidgetId != null) {
@@ -50,7 +50,7 @@ export function Board() {
     return (
         <div 
             className={styles.board}
-            onMouseDown={onMouseDown}
+            // onMouseDown={onMouseDown}
             onMouseMove={onMouseMove}
             onMouseUp={onMouseUp}
         >
