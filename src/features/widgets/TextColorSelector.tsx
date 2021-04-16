@@ -7,10 +7,11 @@ const availableTextColors = [
 
 export interface TextColorSelectorInterface {
     onColorChange: (color: string) => void,
+    initialColor: string,
 }
 
-export function TextColorSelector({onColorChange}: TextColorSelectorInterface) {
-    const [ color, setColor ] = useState(availableTextColors[0])
+export function TextColorSelector({onColorChange, initialColor}: TextColorSelectorInterface) {
+    const [ color, setColor ] = useState(initialColor)
 
     useEffect(() => {
         onColorChange(color)

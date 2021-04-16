@@ -82,7 +82,7 @@ export function Widget({widgetId, focused}: WidgetProps) {
     let textColorSelector = null;
     if (colorSelectorVisible === true) {
         textColorSelector = <div className={styles.textColorSelector}>
-            <TextColorSelector onColorChange={setTextColor}/>
+            <TextColorSelector initialColor={textColor} onColorChange={setTextColor}/>
         </div>
     }
 
