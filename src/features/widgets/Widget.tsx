@@ -1,13 +1,12 @@
 
 import { useDispatch, useSelector } from "react-redux"
 import styles from "./Widget.module.css"
-import { selectWidgetById, updateText, focusWidget, unfocusWidget } from "./widgetsSlice"
+import { selectWidgetById, updateText, focusWidget, unfocusWidget, startDragging } from "./widgetsSlice"
 import circle from "./circle.svg"
 import { EntityId } from "@reduxjs/toolkit"
 import { RootState } from "../../index"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { TextColorSelector } from "./TextColorSelector"
-import { startDragging } from "../board/boardSlice"
 
 interface WidgetProps {
     widgetId: EntityId,
@@ -32,7 +31,7 @@ export function Widget({widgetId, focused}: WidgetProps) {
         return function cleanup() {
             document.removeEventListener("mousedown", mouseDownUnfocus)
         }
-    }, [dispatch, unfocusWidget])
+    }, [dispatch])
 
     if (!widget) return <div></div>
 

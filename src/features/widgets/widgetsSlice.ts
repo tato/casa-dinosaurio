@@ -19,24 +19,18 @@ interface TextWidget extends BaseWidget {
 type Widget = TokenWidget | TextWidget
 
 
-// TODO! this helper might be a bit wacky
-export function getDraggingAction(action: string, widgetId: EntityId, dx: number, dy: number) {
-    if (action === "move") {
-        return moveWidget({widgetId, dx, dy})
-    } else if (action.startsWith("resize")) {
-        const direction = action.substring(6)
-        return resizeWidget({widgetId, dx, dy, direction})
-    }
-}
-
 const widgetsAdapter = createEntityAdapter<Widget>()
 
 interface WidgetsState extends EntityState<Widget> {
     focusedWidget: EntityId | null,
+    draggingWidgetId: EntityId | null,
+    draggingAction: string,
 }
 let initialState: WidgetsState = {
     ...widgetsAdapter.getInitialState(),
     focusedWidget: null,
+    draggingWidgetId: null,
+    draggingAction: "move",
 }
 
 export const widgetsSlice = createSlice({
@@ -81,54 +75,63 @@ export const widgetsSlice = createSlice({
                 widget.text = text
             }
         },
+        dragWidget(state, action) {
+            let { widgetId, dx, dy } = action.payload
+            if (state.draggingAction === "move") {
+
+                let widget = state.entities[widgetId]
+                if (widget) {
+                    widget.x += dx
+                    widget.y += dy
+                }
+            } else if (state.draggingAction.startsWith("resize")) {
+                let direction = state.draggingAction.substring(6)
+                let widget = state.entities[widgetId]
+                if (widget) {
+                    let diff = { width: 0, height: 0 }
+    
+                    if (direction.includes("E")) {
+                        diff.width = dx
+                    } else if (direction.includes("W")) {
+                        diff.width = -dx
+                    }
+    
+                    if (direction.includes("S")) {
+                        diff.height = dy
+                    } else if (direction.includes("N")) {
+                        diff.height = -dy
+                    }
+    
+                    if (widget.proportional) {
+                        if (diff.width >= 0 && diff.height >= 0) {
+                            diff.width = Math.max(diff.width, diff.height)
+                            diff.height = Math.max(diff.width, diff.height)
+                        } else {
+                            diff.width = Math.min(diff.width, diff.height)
+                            diff.height = Math.min(diff.width, diff.height)
+                        }
+                    }
+    
+                    if (widget.width + diff.width >= 16 && widget.height + diff.height >= 16) {
+                        widget.width += diff.width
+                        widget.height += diff.height
+                        if (direction.includes("W")) widget.x -= diff.width
+                        if (direction.includes("N")) widget.y -= diff.height
+                    }
+                }
+            }
+        },
         removeWidget(state, action) {
             state.focusedWidget = null
             widgetsAdapter.removeOne(state, action.payload)
         },
-        moveWidget(state, action) {
-            let { widgetId, dx, dy } = action.payload
-            let widget = state.entities[widgetId]
-            if (widget) {
-                widget.x += dx
-                widget.y += dy
-            }
+        startDragging(state, action) {
+            let { widgetId, action: kind } = action.payload
+            state.draggingWidgetId = widgetId
+            state.draggingAction = kind
         },
-        resizeWidget(state, action) {
-            let { widgetId, dx, dy, direction } = action.payload
-
-            let widget = state.entities[widgetId]
-            if (widget) {
-                let diff = { width: 0, height: 0 }
-
-                if (direction.includes("E")) {
-                    diff.width = dx
-                } else if (direction.includes("W")) {
-                    diff.width = -dx
-                }
-
-                if (direction.includes("S")) {
-                    diff.height = dy
-                } else if (direction.includes("N")) {
-                    diff.height = -dy
-                }
-
-                if (widget.proportional) {
-                    if (diff.width >= 0 && diff.height >= 0) {
-                        diff.width = Math.max(diff.width, diff.height)
-                        diff.height = Math.max(diff.width, diff.height)
-                    } else {
-                        diff.width = Math.min(diff.width, diff.height)
-                        diff.height = Math.min(diff.width, diff.height)
-                    }
-                }
-
-                if (widget.width + diff.width >= 16 && widget.height + diff.height >= 16) {
-                    widget.width += diff.width
-                    widget.height += diff.height
-                    if (direction.includes("W")) widget.x -= diff.width
-                    if (direction.includes("N")) widget.y -= diff.height
-                }
-            }
+        stopDragging(state) {
+            state.draggingWidgetId = null
         },
         focusWidget(state, action) {
             state.focusedWidget = action.payload.widgetId
@@ -140,7 +143,7 @@ export const widgetsSlice = createSlice({
     }
 })
 
-export const { addTokenWidget, addTextWidget, updateText, removeWidget, moveWidget, resizeWidget, focusWidget, unfocusWidget } = widgetsSlice.actions
+export const { addTokenWidget, addTextWidget, updateText, removeWidget, startDragging, stopDragging, dragWidget, focusWidget, unfocusWidget } = widgetsSlice.actions
 
 export const {
     selectAll: selectAllWidgets,
@@ -148,6 +151,12 @@ export const {
     selectIds: selectWidgetIds
 } = widgetsAdapter.getSelectors((state: RootState) => state.widgets)
 
-export const selectFocusedWidgetId = (state: RootState) => state.widgets.focusedWidget
+export const selectFocusedWidgetId = 
+    (state: RootState) => state.widgets.focusedWidget
+export const selectDraggingWidgetId = 
+    (state: RootState) => state.widgets.draggingWidgetId
+export const selectDraggingAction = 
+    (state: RootState) => state.widgets.draggingAction
+
 
 export default widgetsSlice.reducer
