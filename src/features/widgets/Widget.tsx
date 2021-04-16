@@ -1,7 +1,7 @@
 
 import { useDispatch, useSelector } from "react-redux"
 import styles from "./Widget.module.css"
-import { selectWidgetById, removeWidget, updateText, selectFocusedWidgetId, focusWidget } from "./widgetsSlice"
+import { selectWidgetById, updateText, focusWidget } from "./widgetsSlice"
 import circle from "./circle.svg"
 import { EntityId } from "@reduxjs/toolkit"
 import { RootState } from "../../index"
@@ -42,7 +42,6 @@ export function Widget({widgetId, focused}: WidgetProps) {
             dispatch(startDragging({widgetId, action}))
         }
     }
-    const onClickDelete = () => dispatch(removeWidget(widgetId))
     const onClickTextColor = () => setColorSelectorVisible(visible => !visible)
     const onClickTextSmaller = () => setTextSize(ts => ts - Math.floor(ts*0.2))
     const onClickTextBigger = () => setTextSize(ts => ts + Math.floor(ts*0.2))
