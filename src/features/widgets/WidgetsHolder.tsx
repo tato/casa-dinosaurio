@@ -4,8 +4,6 @@ import { Widget } from "./Widget"
 import React, { useEffect } from "react";
 import { WidgetTrash } from "../board/WidgetTrash";
 
-let lastMouseX = 0
-let lastMouseY = 0
 
 export function WidgetsHolder() {
     
@@ -17,14 +15,15 @@ export function WidgetsHolder() {
 
     useEffect(() => {
         function onMouseMove(event: MouseEvent) {
+            console.log(event.movementX)
+            console.log(event.movementY)
             if (draggingWidgetId != null) {
-                const dx = event.screenX - lastMouseX
-                const dy = event.screenY - lastMouseY
-                dispatch(dragWidget({widgetId: draggingWidgetId, dx, dy }))
+                dispatch(dragWidget({
+                    widgetId: draggingWidgetId, 
+                    dx: event.movementX, 
+                    dy: event.movementY 
+                }))
             }
-    
-            lastMouseX = event.screenX
-            lastMouseY = event.screenY
         }
         document.addEventListener("mousemove", onMouseMove)
         return function() {
