@@ -42,16 +42,6 @@ export function WidgetsHolder() {
         }
     }, [dispatch])
 
-    useEffect(() => {
-        function handleScroll() {
-            dispatch(stopDragging())
-        }
-        document.addEventListener("scroll", handleScroll)
-        return function cleanup() {
-            document.removeEventListener("scroll", handleScroll)
-        }
-    }, [dispatch])
-
     const widgetTrashOnMouseUp = () => {
         dispatch(removeWidget(draggingWidgetId))
     }
