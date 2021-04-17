@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit"
-import casa from "./casa.jpg"
+import background from "./background.jpg" // Photo by Anukrati Omar on Unsplash
+  
 
 interface BoardState {
     backgroundImage: string,
 }
 const initialState: BoardState = {
-    backgroundImage: casa,
+    backgroundImage: background,
 }
 
 export const boardSlice = createSlice({
