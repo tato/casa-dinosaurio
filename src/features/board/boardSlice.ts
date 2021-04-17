@@ -3,7 +3,7 @@ import { RootState } from "../.."
 import background from "./background.jpg" // Photo by Anukrati Omar on Unsplash
   
 
-interface BoardState {
+export interface BoardState {
     backgroundImage: string,
 }
 const initialState: BoardState = {
