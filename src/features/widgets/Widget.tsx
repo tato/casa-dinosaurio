@@ -17,6 +17,8 @@ export function Widget({widgetId, focused}: WidgetProps) {
     const [colorSelectorVisible, setColorSelectorVisible] = useState(false) // TODO! how about the token widget
     const [textColor, setTextColor] = useState("black") // TODO! how about the token widget
     const [textSize, setTextSize] = useState(24) // TODO! how about the token widget
+    // TODO! how about the token widget 
+    // text widget is a specialization https://reactjs.org/docs/composition-vs-inheritance.html#specialization
 
     const dispatch = useDispatch()
 
