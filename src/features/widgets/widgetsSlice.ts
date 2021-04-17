@@ -1,6 +1,8 @@
 import { createEntityAdapter, createSlice, EntityId, EntityState, nanoid } from "@reduxjs/toolkit"
 import { RootState } from "../../index"
 
+
+
 interface BaseWidget {
     id: EntityId
     x: number
@@ -15,8 +17,11 @@ export interface TokenWidget extends BaseWidget {
 export interface TextWidget extends BaseWidget {
     kind: "text"
     text: string
+    fontColor: string
+    fontSize: number
 }
 export type Widget = TokenWidget | TextWidget
+
 
 
 const widgetsAdapter = createEntityAdapter<Widget>()
@@ -64,6 +69,8 @@ export const widgetsSlice = createSlice({
                     height: Number(height) || 0,
                     proportional: false,
                     text: "",
+                    fontColor: "black",
+                    fontSize: 24,
                 }
                 return { payload: text }
             },
@@ -73,6 +80,29 @@ export const widgetsSlice = createSlice({
             let widget = state.entities[widgetId]
             if (widget && widget.kind === "text") {
                 widget.text = text
+            }
+        },
+        updateFontColor(state, action) {
+            let { widgetId, fontColor } = action.payload
+            let widget = state.entities[widgetId]
+            if (widget && widget.kind === "text") {
+                widget.fontColor = fontColor
+            }
+        },
+        decreaseFontSize(state, action) {
+            let { widgetId } = action.payload
+            let widget = state.entities[widgetId]
+            console.log(widget)
+            if (widget && widget.kind === "text") {
+                console.log("Si")
+                widget.fontSize = widget.fontSize - Math.floor(widget.fontSize * 0.2)
+            }
+        },
+        increaseFontSize(state, action) {
+            let { widgetId } = action.payload
+            let widget = state.entities[widgetId]
+            if (widget && widget.kind === "text") {
+                widget.fontSize = widget.fontSize + Math.floor(widget.fontSize * 0.2)
             }
         },
         dragWidget(state, action) {
@@ -89,19 +119,19 @@ export const widgetsSlice = createSlice({
                 let widget = state.entities[widgetId]
                 if (widget) {
                     let diff = { width: 0, height: 0 }
-    
+
                     if (direction.includes("E")) {
                         diff.width = dx
                     } else if (direction.includes("W")) {
                         diff.width = -dx
                     }
-    
+
                     if (direction.includes("S")) {
                         diff.height = dy
                     } else if (direction.includes("N")) {
                         diff.height = -dy
                     }
-    
+
                     if (widget.proportional) {
                         if (diff.width >= 0 && diff.height >= 0) {
                             diff.width = Math.max(diff.width, diff.height)
@@ -111,7 +141,7 @@ export const widgetsSlice = createSlice({
                             diff.height = Math.min(diff.width, diff.height)
                         }
                     }
-    
+
                     if (widget.width + diff.width >= 16 && widget.height + diff.height >= 16) {
                         widget.width += diff.width
                         widget.height += diff.height
@@ -139,11 +169,34 @@ export const widgetsSlice = createSlice({
         unfocusWidget(state) {
             // Note: removeWidget also unfocuses
             state.focusedWidget = null
+        },
+        deserializeWidgets(state, action) {
+            state.focusedWidget = initialState.focusedWidget
+            state.draggingWidgetId = initialState.draggingWidgetId
+            state.draggingAction = initialState.draggingAction
+            widgetsAdapter.removeAll(state)
+            widgetsAdapter.addMany(state, action.payload)
         }
     }
 })
 
-export const { addTokenWidget, addTextWidget, updateText, removeWidget, startDragging, stopDragging, dragWidget, focusWidget, unfocusWidget } = widgetsSlice.actions
+
+export const { 
+    addTokenWidget, 
+    addTextWidget, 
+    updateText,
+    increaseFontSize,
+    decreaseFontSize,
+    updateFontColor,
+    removeWidget, 
+    startDragging, 
+    stopDragging, 
+    dragWidget, 
+    focusWidget, 
+    unfocusWidget,
+    deserializeWidgets,
+} = widgetsSlice.actions
+
 
 export const {
     selectAll: selectAllWidgets,
@@ -151,12 +204,17 @@ export const {
     selectIds: selectWidgetIds
 } = widgetsAdapter.getSelectors((state: RootState) => state.widgets)
 
-export const selectFocusedWidgetId = 
+export const selectFocusedWidgetId =
     (state: RootState) => state.widgets.focusedWidget
-export const selectDraggingWidgetId = 
+export const selectDraggingWidgetId =
     (state: RootState) => state.widgets.draggingWidgetId
-export const selectDraggingAction = 
+export const selectDraggingAction =
     (state: RootState) => state.widgets.draggingAction
+
+
+export const selectSerializedWidgets = (state: RootState) => {
+    return Object.values(state.widgets.entities)
+}
 
 
 export default widgetsSlice.reducer

@@ -1,9 +1,10 @@
 import { useRef } from "react"
 import { useDispatch } from "react-redux"
-import { getState, replaceState } from "../.."
-import { addTextWidget, addTokenWidget } from "../widgets/widgetsSlice"
+import { getState, storeVersion } from "../.."
+import { migrations } from "../../migrations"
+import { addTextWidget, addTokenWidget, deserializeWidgets, selectSerializedWidgets } from "../widgets/widgetsSlice"
 import styles from "./BoardActions.module.css"
-import { updateBackgroundImage } from "./boardSlice"
+import { deserializeBoard, selectSerializedBoard, updateBackgroundImage } from "./boardSlice"
 
 
 const reader = new FileReader()
@@ -45,7 +46,12 @@ export function BoardActions() {
 
 
     function onClickExport() {
-        let serialized = JSON.stringify(getState())
+        const state =  getState()
+        const serialized = JSON.stringify({
+            version: storeVersion,
+            board: selectSerializedBoard(state),
+            widgets: selectSerializedWidgets(state),
+        })
 
         let a = document.createElement("a");
         a.setAttribute("href", "data:application/json;charset=utf-8," + encodeURIComponent(serialized))
@@ -65,8 +71,23 @@ export function BoardActions() {
     async function onLoadImportFinished(e: React.ChangeEvent) {
         if (e.target instanceof HTMLInputElement && e.target.files && e.target.files.length > 0) {
             const text =  await e.target.files[0].text()
-            // TODO: Validation
-            replaceState(JSON.parse(text))
+            const serialized = JSON.parse(text)
+
+            if (!serialized.version) {
+                // TODO! error
+            }
+            while (serialized.version < storeVersion) {
+                let oldVersion = serialized.version
+                migrations[serialized.version](serialized)
+                if (oldVersion === serialized.version) {
+                    // TODO! error
+                    break
+                }
+            }
+            
+            // TODO! validation
+            dispatch(deserializeBoard(serialized.board))
+            dispatch(deserializeWidgets(serialized.widgets))
         }
     }
 

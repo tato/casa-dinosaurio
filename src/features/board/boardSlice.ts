@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { RootState } from "../.."
 import background from "./background.jpg" // Photo by Anukrati Omar on Unsplash
   
 
@@ -16,10 +17,18 @@ export const boardSlice = createSlice({
         updateBackgroundImage(state, action) {
             state.backgroundImage = action.payload
         },
+        deserializeBoard(state, action) {
+            state.backgroundImage = action.payload.backgroundImage
+        }
     }
 })
 
-export const { updateBackgroundImage, } = boardSlice.actions
+export const { updateBackgroundImage, deserializeBoard, } = boardSlice.actions
 
+export function selectSerializedBoard(state: RootState) {
+    return {
+        backgroundImage: state.board.backgroundImage
+    }
+}
 
 export default boardSlice.reducer

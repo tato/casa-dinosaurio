@@ -9,42 +9,29 @@ import boardReducer from "./features/board/boardSlice"
 import widgetsReducer from "./features/widgets/widgetsSlice"
 import { Board } from './features/board/Board'
 
-export let store = configureStore({
-  reducer: {
-    board: boardReducer,
-    widgets: widgetsReducer,
-  },
+const store = configureStore({
+    reducer: {
+        board: boardReducer,
+        widgets: widgetsReducer,
+    },
 })
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
-
-export function getState() {
-  return store.getState()
-}
-export function replaceState(state: RootState) {
-  store = configureStore({
-    reducer: {
-      board: boardReducer,
-      widgets: widgetsReducer,
-    },
-    preloadedState: state,
-  })
-  render()
+export const storeVersion = 1
+export function getState(): RootState {
+    return store.getState()
 }
 
-function render() {
-  ReactDOM.render(
+ReactDOM.render(
     <React.StrictMode>
-      <Provider store={store}>
-        <Board />
-      </Provider>
+        <Provider store={store}>
+            <Board />
+        </Provider>
     </React.StrictMode>,
     document.getElementById('root')
-  )
-}
-render()
+)
 
 
 // If you want your app to work offline and load faster, you can change

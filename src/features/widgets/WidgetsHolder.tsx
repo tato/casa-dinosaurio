@@ -15,8 +15,6 @@ export function WidgetsHolder() {
 
     useEffect(() => {
         function onMouseMove(event: MouseEvent) {
-            console.log(event.movementX)
-            console.log(event.movementY)
             if (draggingWidgetId != null) {
                 dispatch(dragWidget({
                     widgetId: draggingWidgetId, 

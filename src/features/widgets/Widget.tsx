@@ -1,7 +1,7 @@
 
 import { useDispatch, useSelector } from "react-redux"
 import styles from "./Widget.module.css"
-import { selectWidgetById, updateText, focusWidget, unfocusWidget, startDragging, TokenWidget } from "./widgetsSlice"
+import { selectWidgetById, updateText, increaseFontSize, decreaseFontSize, focusWidget, unfocusWidget, startDragging, TokenWidget, updateFontColor } from "./widgetsSlice"
 import circle from "./circle.svg"
 import { EntityId } from "@reduxjs/toolkit"
 import { RootState } from "../../index"
@@ -15,8 +15,6 @@ interface WidgetProps {
 
 export function Widget({widgetId, focused}: WidgetProps) {
     const [colorSelectorVisible, setColorSelectorVisible] = useState(false) // TODO! how about the token widget
-    const [textColor, setTextColor] = useState("black") // TODO! how about the token widget
-    const [textSize, setTextSize] = useState(24) // TODO! how about the token widget
     // TODO! how about the token widget 
     // text widget is a specialization https://reactjs.org/docs/composition-vs-inheritance.html#specialization
 
@@ -49,8 +47,8 @@ export function Widget({widgetId, focused}: WidgetProps) {
         }
     }
     const onClickTextColor = () => setColorSelectorVisible(visible => !visible)
-    const onClickTextSmaller = () => setTextSize(ts => ts - Math.floor(ts*0.2))
-    const onClickTextBigger = () => setTextSize(ts => ts + Math.floor(ts*0.2))
+    const onClickTextSmaller = () => dispatch(decreaseFontSize({widgetId}))
+    const onClickTextBigger = () => dispatch(increaseFontSize({widgetId}))
 
     const onFocusDraggable = () => dispatch(focusWidget({widgetId}))
 
@@ -64,25 +62,27 @@ export function Widget({widgetId, focused}: WidgetProps) {
         
     } else if (widget.kind === "text") {
         const onTextAreaInput = (e: React.FormEvent<HTMLTextAreaElement>) => {
-            if (e.target instanceof HTMLInputElement) {
+            if (e.target instanceof HTMLTextAreaElement) {
                 dispatch(updateText({widgetId, text: e.target.value}))
             }
         }
         const textAreaStyle = {
-            color: textColor,
-            fontSize: `${textSize}px`,
+            color: widget.fontColor,
+            fontSize: `${widget.fontSize}px`,
         }
         content = <textarea 
-                defaultValue={widget.text} 
+                value={widget.text}
                 onInput={onTextAreaInput} 
-                style={textAreaStyle}>
-            </textarea>
+                style={textAreaStyle}/>
     }
 
     let textColorSelector = null;
-    if (colorSelectorVisible === true) {
+    if (colorSelectorVisible === true && widget.kind === "text") {
         textColorSelector = <div className={styles.textColorSelector}>
-            <TextColorSelector initialColor={textColor} onColorChange={setTextColor}/>
+            <TextColorSelector 
+                initialColor={widget.fontColor} 
+                onColorChange={fontColor => dispatch(updateFontColor({widgetId, fontColor}))}
+            />
         </div>
     }
 
@@ -115,7 +115,6 @@ export function Widget({widgetId, focused}: WidgetProps) {
 
     return (
         <div className={draggableClassName} style={draggableStyle} onMouseDown={onFocusDraggable}>
-            {/* TODO! <div className={styles.draggableClose} onClick={onClickDelete}>x</div> */}
             { focused ? resizeControls : null }
             { focused ? textWidgetControls : null }
             { focused ? textColorSelector : null }
