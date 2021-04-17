@@ -2,21 +2,21 @@ import { createEntityAdapter, createSlice, EntityId, EntityState, nanoid } from 
 import { RootState } from "../../index"
 
 interface BaseWidget {
-    id: string
+    id: EntityId
     x: number
     y: number
     width: number
     height: number
     proportional: boolean
 }
-interface TokenWidget extends BaseWidget {
+export interface TokenWidget extends BaseWidget {
     kind: "token"
 }
-interface TextWidget extends BaseWidget {
+export interface TextWidget extends BaseWidget {
     kind: "text"
     text: string
 }
-type Widget = TokenWidget | TextWidget
+export type Widget = TokenWidget | TextWidget
 
 
 const widgetsAdapter = createEntityAdapter<Widget>()

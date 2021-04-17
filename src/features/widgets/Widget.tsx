@@ -1,7 +1,7 @@
 
 import { useDispatch, useSelector } from "react-redux"
 import styles from "./Widget.module.css"
-import { selectWidgetById, updateText, focusWidget, unfocusWidget, startDragging } from "./widgetsSlice"
+import { selectWidgetById, updateText, focusWidget, unfocusWidget, startDragging, TokenWidget } from "./widgetsSlice"
 import circle from "./circle.svg"
 import { EntityId } from "@reduxjs/toolkit"
 import { RootState } from "../../index"
@@ -16,10 +16,11 @@ interface WidgetProps {
 export function Widget({widgetId, focused}: WidgetProps) {
     const [colorSelectorVisible, setColorSelectorVisible] = useState(false) // TODO! how about the token widget
     const [textColor, setTextColor] = useState("black") // TODO! how about the token widget
-    const [textSize, setTextSize] = useState(16) // TODO! how about the token widget
+    const [textSize, setTextSize] = useState(24) // TODO! how about the token widget
 
-    const widget = useSelector((state: RootState) => selectWidgetById(state, widgetId))
     const dispatch = useDispatch()
+
+    const widget = useSelector((state: RootState) => selectWidgetById(state, widgetId)) || defaultWidget(widgetId)
 
     useEffect(() => {
         function mouseDownUnfocus(event: MouseEvent) {
@@ -32,8 +33,6 @@ export function Widget({widgetId, focused}: WidgetProps) {
             document.removeEventListener("mousedown", mouseDownUnfocus)
         }
     }, [dispatch])
-
-    if (!widget) return <div></div>
 
     let draggableStyle = { 
         top: `${widget.y}px`, left: `calc(50% + ${widget.x}px)`,
@@ -123,3 +122,15 @@ export function Widget({widgetId, focused}: WidgetProps) {
     )
 }
 
+
+function defaultWidget(id: EntityId): TokenWidget {
+    return {
+        kind: "token",
+        id,
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        proportional: true,
+    }
+}
