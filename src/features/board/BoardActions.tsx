@@ -105,6 +105,14 @@ export function BoardActions() {
                 onChange={onLoadImportFinished}
             />
             <button type="button" onClick={onClickImport}>Import</button>
+            <select>
+                <option>Option 1</option>
+                <option>Option 2</option>
+            </select>
+            <button style={{padding: "3px 6px 3px 9px"}}>
+                Add
+                <span className="material-icons">arrow_drop_down</span>
+            </button>
         </div>
     )
 }
